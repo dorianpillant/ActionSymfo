@@ -72,6 +72,7 @@ class ArticleController extends Controller
         if($form->isSubmitted() && $form->isValid()){
             if($article->getId()){
                $article->setCreatedAt(new \DateTime()); 
+               
             }
             
 
