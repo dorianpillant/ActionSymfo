@@ -32,12 +32,6 @@ class Article
     private $content;
 
     /**
-     * @ORM\Column(type="text")
-     * @Assert\Url()
-     */
-    private $text;
-
-    /**
      * @ORM\Column(type="string", length=255)
      */
     private $image;
