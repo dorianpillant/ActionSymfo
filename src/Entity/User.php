@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\UserRepository")
@@ -25,12 +26,17 @@ class User
      * @ORM\Column(type="string", length=255)
      */
     private $username;
-
+    //EqualTo Valide le fait que le champ sois similaire à quelque chose d'autre et je veux que cette propriété $password sois égal à une autre propriéter de mon objet
     /**
      * @ORM\Column(type="string", length=255)
+     * @Assert\Length(min="8", minMessage="Votre mot de passe doit faire minimum 8 caractères")
+     * @Assert\EqualTo(propertyPath="confirm_password, message="Votre mot de passe n'est pas identique")
      */
     private $password;
 
+    /**
+     * @Assert\EqualTo(propertyPath="password, message="Votre mot de passe n'est pas identique")
+     */
     public $confirm_password;
 
     public function getId()
