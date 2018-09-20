@@ -12,6 +12,8 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
+use App\Entity\Comment;
+use App\Form\CommentType;
 
 class ArticleController extends Controller
 {
@@ -93,14 +95,31 @@ class ArticleController extends Controller
     /**
      * @Route("/article/{id}", name="article_show")
      */
-    public function show($id)
+    public function show(Article $article, Request $request, ObjectManager $manager)
     {
+        $comment = new Comment();
+
+        $form = $this->createForm(CommentType::class, $comment);
+
+        $form->handleRequest($request);
+
+        if($form->isSubmitted() && $form->isValid()){
+            $comment->setCreatedAt(new \DateTime())
+                    ->setArticle($article);
+
+            $manager->persist($comment);
+            $manager->flush();
+
+            return $this->redirectToRoute('article_show', ['id' =>$article->getId()]);
+        }
+
         $repo = $this->getDoctrine()->getRepository(Article::class);
 
         $article = $repo->find($id);
 
         return $this->render('article/show.html.twig', [
-            'article' => $article
+            'article' => $article,
+            'CommentForm' => $form->createView()
         ]);
     }
 
